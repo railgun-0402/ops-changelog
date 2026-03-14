@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"ops-changelog/cmd"
+	"github.com/railgun-0402/ops-changelog/cmd"
 )
 
 func main() {

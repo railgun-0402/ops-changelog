@@ -1,4 +1,4 @@
-module ops-changelog
+module github.com/railgun-0402/ops-changelog
 
 go 1.26.0
 

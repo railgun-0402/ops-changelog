@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	gh "ops-changelog/internal/github"
+	gh "github.com/railgun-0402/ops-changelog/internal/github"
 )
 
 // PrintPRs writes a human-readable PR list to w.
