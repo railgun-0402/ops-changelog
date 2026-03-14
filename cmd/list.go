@@ -29,11 +29,10 @@ var listCmd = &cobra.Command{
 
 func init() {
 	listCmd.Flags().StringVar(&flagRepo, "repo", "", "GitHub repository in owner/repo format (required)")
-	listCmd.Flags().StringVar(&flagService, "service", "", "Service name — matches label 'service:<name>' (required)")
+	listCmd.Flags().StringVar(&flagService, "service", "", "Service name — matches label 'service:<name>' (optional)")
 	listCmd.Flags().StringVar(&flagSince, "since", "24h", "How far back to look (e.g. 1h, 24h, 7d, 30d)")
 
 	_ = listCmd.MarkFlagRequired("repo")
-	_ = listCmd.MarkFlagRequired("service")
 
 	rootCmd.AddCommand(listCmd)
 }

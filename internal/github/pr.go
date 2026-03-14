@@ -27,7 +27,10 @@ type ListMergedPRsOptions struct {
 
 // ListMergedPRs fetches merged PRs filtered by service label and merged-after time.
 func (c *Client) ListMergedPRs(ctx context.Context, opts ListMergedPRsOptions) ([]PR, error) {
-	targetLabel := fmt.Sprintf("service:%s", opts.Service)
+	var targetLabel string
+	if opts.Service != "" {
+		targetLabel = fmt.Sprintf("service:%s", opts.Service)
+	}
 
 	var result []PR
 	page := 1
@@ -44,7 +47,7 @@ func (c *Client) ListMergedPRs(ctx context.Context, opts ListMergedPRsOptions) (
 				return result, nil
 			}
 
-			if hasLabel(pr.Labels, targetLabel) {
+			if targetLabel == "" || hasLabel(pr.Labels, targetLabel) {
 				result = append(result, pr)
 			}
 		}
