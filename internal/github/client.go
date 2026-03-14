@@ -43,11 +43,11 @@ func tokenFromGHCLI() (string, error) {
 
 // apiPR is the raw GitHub API pull request shape (subset of fields we need).
 type apiPR struct {
-	Number    int    `json:"number"`
-	Title     string `json:"title"`
-	HTMLURL   string `json:"html_url"`
-	MergedAt  string `json:"merged_at"`
-	User      struct {
+	Number   int    `json:"number"`
+	Title    string `json:"title"`
+	HTMLUrl  string `json:"html_url"`
+	MergedAt string `json:"merged_at"`
+	User     struct {
 		Login string `json:"login"`
 	} `json:"user"`
 	Labels []struct {
@@ -101,7 +101,7 @@ func (c *Client) fetchMergedPRPage(ctx context.Context, owner, repo string, page
 		prs = append(prs, PR{
 			Number:   r.Number,
 			Title:    r.Title,
-			URL:      r.HTMLURL,
+			URL:      r.HTMLUrl,
 			Author:   r.User.Login,
 			MergedAt: mergedAt,
 			Labels:   labels,
