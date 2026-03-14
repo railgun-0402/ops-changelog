@@ -11,14 +11,19 @@ import (
 
 // PrintPRs writes a human-readable PR list to w.
 func PrintPRs(w io.Writer, prs []gh.PR, repo, service string, since time.Time) {
+	serviceLabel := "all services"
+	if service != "" {
+		serviceLabel = "service:" + service
+	}
+
 	if len(prs) == 0 {
-		fmt.Fprintf(w, "No merged PRs found for service:%s in %s since %s\n",
-			service, repo, since.Format("2006-01-02 15:04 UTC"))
+		fmt.Fprintf(w, "No merged PRs found for %s in %s since %s\n",
+			serviceLabel, repo, since.Format("2006-01-02 15:04 UTC"))
 		return
 	}
 
-	fmt.Fprintf(w, "Merged PRs for service:%s in %s (since %s)\n",
-		service, repo, since.Format("2006-01-02 15:04 UTC"))
+	fmt.Fprintf(w, "Merged PRs for %s in %s (since %s)\n",
+		serviceLabel, repo, since.Format("2006-01-02 15:04 UTC"))
 	fmt.Fprintln(w, strings.Repeat("─", 72))
 
 	for _, pr := range prs {
