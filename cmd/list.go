@@ -9,8 +9,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"ops-changelog/internal/formatter"
-	gh "ops-changelog/internal/github"
+	"github.com/railgun-0402/ops-changelog/internal/formatter"
+	gh "github.com/railgun-0402/ops-changelog/internal/github"
 )
 
 var (
