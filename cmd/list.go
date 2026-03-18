@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -78,11 +79,11 @@ func splitRepo(repo string) (owner, name string, err error) {
 // parseSince supports Go duration strings (1h, 24h) and day shorthand (7d, 30d).
 func parseSince(s string) (time.Time, error) {
 	if strings.HasSuffix(s, "d") {
-		days, err := time.ParseDuration(strings.TrimSuffix(s, "d") + "h")
+		n, err := strconv.Atoi(strings.TrimSuffix(s, "d"))
 		if err != nil {
 			return time.Time{}, err
 		}
-		return time.Now().UTC().Add(-days * 24), nil
+		return time.Now().UTC().AddDate(0, 0, -n), nil
 	}
 	d, err := time.ParseDuration(s)
 	if err != nil {
