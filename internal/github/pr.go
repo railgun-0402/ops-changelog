@@ -9,12 +9,12 @@ import (
 
 // PR represents a merged pull request.
 type PR struct {
-	Number   int
-	Title    string
-	URL      string
-	Author   string
-	MergedAt time.Time
-	Labels   []string
+	Number   int       `json:"number"`
+	Title    string    `json:"title"`
+	URL      string    `json:"url"`
+	Author   string    `json:"author"`
+	MergedAt time.Time `json:"merged_at"`
+	Labels   []string  `json:"labels"`
 }
 
 // ListMergedPRsOptions holds filtering options.
