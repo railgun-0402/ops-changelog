@@ -18,6 +18,7 @@ var (
 	flagRepo    string
 	flagService string
 	flagSince   string
+	flagFormat  string
 )
 
 var listCmd = &cobra.Command{
@@ -32,6 +33,7 @@ func init() {
 	listCmd.Flags().StringVar(&flagRepo, "repo", "", "GitHub repository in owner/repo format (required)")
 	listCmd.Flags().StringVar(&flagService, "service", "", "Service name — matches label 'service:<name>' (optional)")
 	listCmd.Flags().StringVar(&flagSince, "since", "24h", "How far back to look (e.g. 1h, 24h, 7d, 30d)")
+	listCmd.Flags().StringVar(&flagFormat, "format", "text", "Output format: text or json")
 
 	_ = listCmd.MarkFlagRequired("repo")
 
@@ -64,7 +66,16 @@ func runList(cmd *cobra.Command, _ []string) error {
 		return fmt.Errorf("failed to fetch PRs: %w", err)
 	}
 
-	formatter.PrintPRs(os.Stdout, prs, flagRepo, flagService, since)
+	switch flagFormat {
+	case "json":
+		if err := formatter.PrintPRsJSON(os.Stdout, prs); err != nil {
+			return err
+		}
+	case "text":
+		formatter.PrintPRs(os.Stdout, prs, flagRepo, flagService, since)
+	default:
+		return fmt.Errorf("invalid --format value %q, must be one of: text, json", flagFormat)
+	}
 	return nil
 }
 
