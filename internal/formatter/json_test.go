@@ -28,6 +28,27 @@ func TestPrintPRsJSON(t *testing.T) {
 			},
 		},
 		{
+			name: "multiple PRs",
+			prs: []gh.PR{
+				{
+					Number:   1,
+					Title:    "Fix something",
+					URL:      "https://github.com/myorg/myrepo/pull/1",
+					Author:   "alice",
+					MergedAt: time.Date(2026, 3, 14, 10, 30, 0, 0, time.UTC),
+					Labels:   []string{"service:apply-api", "fix"},
+				},
+				{
+					Number:   2,
+					Title:    "Fix something2",
+					URL:      "https://github.com/myorg/myrepo/pull/2",
+					Author:   "Bob",
+					MergedAt: time.Date(2026, 3, 30, 22, 15, 0, 0, time.UTC),
+					Labels:   []string{"service:apply-api", "fix"},
+				},
+			},
+		},
+		{
 			name: "zero PRs",
 			prs:  []gh.PR{},
 		},
@@ -49,19 +70,16 @@ func TestPrintPRsJSON(t *testing.T) {
 				t.Fatalf("got %d PRs, want %d", len(got), len(tt.prs))
 			}
 
-			// Check the zero-value PR is preserved
-			if len(got) == 0 {
-				return
-			}
-
-			if got[0].Number != tt.prs[0].Number {
-				t.Errorf("Number: got %d, want %d", got[0].Number, tt.prs[0].Number)
-			}
-			if got[0].Title != tt.prs[0].Title {
-				t.Errorf("Title: got %q, want %q", got[0].Title, tt.prs[0].Title)
-			}
-			if got[0].Author != tt.prs[0].Author {
-				t.Errorf("Author: got %q, want %q", got[0].Author, tt.prs[0].Author)
+			for i := range tt.prs {
+				if got[i].Number != tt.prs[i].Number {
+					t.Errorf("PR[%d] Number: got %d, want %d", i, got[i].Number, tt.prs[i].Number)
+				}
+				if got[i].Title != tt.prs[i].Title {
+					t.Errorf("PR[%d] Title: got %q, want %q", i, got[i].Title, tt.prs[i].Title)
+				}
+				if got[i].Author != tt.prs[i].Author {
+					t.Errorf("PR[%d] Author: got %q, want %q", i, got[i].Author, tt.prs[i].Author)
+				}
 			}
 		})
 	}
