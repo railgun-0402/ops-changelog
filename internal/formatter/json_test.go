@@ -15,6 +15,19 @@ func TestPrintPRsJSON(t *testing.T) {
 		prs  []gh.PR
 	}{
 		{
+			name: "empty fields PR",
+			prs: []gh.PR{
+				{
+					Number:   0,
+					Title:    "",
+					URL:      "",
+					Author:   "",
+					MergedAt: time.Time{},
+					Labels:   []string{},
+				},
+			},
+		},
+		{
 			name: "single PR",
 			prs: []gh.PR{
 				{
