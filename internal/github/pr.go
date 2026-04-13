@@ -3,7 +3,6 @@ package github
 import (
 	"context"
 	"fmt"
-	"strings"
 	"time"
 )
 
@@ -26,31 +25,24 @@ type ListMergedPRsOptions struct {
 }
 
 // ListMergedPRs fetches merged PRs filtered by service label and merged-after time.
+// It uses the GitHub Search API to filter server-side, avoiding full pagination
+// through all closed PRs.
 func (c *Client) ListMergedPRs(ctx context.Context, opts ListMergedPRsOptions) ([]PR, error) {
-	var targetLabel string
+	var label string
 	if opts.Service != "" {
-		targetLabel = fmt.Sprintf("service:%s", opts.Service)
+		label = fmt.Sprintf("service:%s", opts.Service)
 	}
 
 	var result []PR
 	page := 1
 
 	for {
-		prs, hasMore, err := c.fetchMergedPRPage(ctx, opts.Owner, opts.Repo, page)
+		prs, hasMore, err := c.SearchMergedPRsPage(ctx, opts.Owner, opts.Repo, label, opts.Since, page)
 		if err != nil {
 			return nil, err
 		}
 
-		for _, pr := range prs {
-			// Stop pagination once we go past the since boundary
-			if pr.MergedAt.Before(opts.Since) {
-				return result, nil
-			}
-
-			if targetLabel == "" || hasLabel(pr.Labels, targetLabel) {
-				result = append(result, pr)
-			}
-		}
+		result = append(result, prs...)
 
 		if !hasMore {
 			break
@@ -59,13 +51,4 @@ func (c *Client) ListMergedPRs(ctx context.Context, opts ListMergedPRsOptions) (
 	}
 
 	return result, nil
-}
-
-func hasLabel(labels []string, target string) bool {
-	for _, l := range labels {
-		if strings.EqualFold(l, target) {
-			return true
-		}
-	}
-	return false
 }
